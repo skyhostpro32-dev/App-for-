@@ -9,34 +9,36 @@ import io
 st.set_page_config(page_title="AI Image Dashboard", layout="wide")
 
 # =========================
-# 💜 GLOBAL CSS (FULL CLEAN UI)
+# 💜 GLOBAL CSS (FULL UI + HIDE STREAMLIT)
 # =========================
 st.markdown("""
 <style>
 
 /* ============================= */
-/* ❌ REMOVE STREAMLIT UI ELEMENTS */
+/* ❌ HIDE STREAMLIT ELEMENTS */
 /* ============================= */
 
-/* Top header (Share, GitHub, menu) */
 header {visibility: hidden;}
 #MainMenu {visibility: hidden;}
-
-/* Footer */
 footer {visibility: hidden;}
 
-/* Bottom-right "Manage app" */
-[data-testid="stStatusWidget"] {display: none !important;}
-[data-testid="stDecoration"] {display: none !important;}
-[data-testid="stToolbar"] {display: none !important;}
-[data-testid="stDeployButton"] {display: none !important;}
+/* 🔥 YOUR STRONG HACK */
+iframe + div,
+div[data-testid="stStatusWidget"],
+div[data-testid="stToolbar"],
+div[data-testid="stDecoration"],
+div[data-testid="stDeployButton"],
+div[class*="css"][style*="position: fixed"] {
+    display: none !important;
+}
 
-/* Extra fallback */
-button[kind="header"] {display: none !important;}
-div[class*="floating"] {display: none !important;}
+/* EXTRA fallback */
+div[style*="position: fixed"] {
+    display: none !important;
+}
 
 /* ============================= */
-/* 🌈 LAVENDER BACKGROUND FIX */
+/* 🌈 LAVENDER BACKGROUND */
 /* ============================= */
 
 html, body, [data-testid="stAppViewContainer"] {
@@ -53,10 +55,9 @@ html, body, [data-testid="stAppViewContainer"] {
 }
 
 /* ============================= */
-/* ✨ UI STYLING */
+/* ✨ UI DESIGN */
 /* ============================= */
 
-/* Title */
 .main-title {
     text-align: center;
     font-size: 38px;
@@ -64,12 +65,10 @@ html, body, [data-testid="stAppViewContainer"] {
     color: #5b21b6;
 }
 
-/* Sidebar */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #f5f3ff, #ddd6fe);
 }
 
-/* Upload Box */
 [data-testid="stFileUploader"] {
     border: 2px dashed #c4b5fd;
     background: #f5f3ff;
@@ -77,7 +76,7 @@ section[data-testid="stSidebar"] {
     padding: 12px;
 }
 
-/* Tool Cards */
+/* TOOL CARDS */
 .tool-card {
     background: white;
     padding: 18px;
@@ -105,7 +104,7 @@ section[data-testid="stSidebar"] {
     margin-top: 6px;
 }
 
-/* Invisible clickable buttons */
+/* INVISIBLE BUTTON */
 .stButton > button {
     width: 100%;
     height: 140px;
@@ -113,14 +112,14 @@ section[data-testid="stSidebar"] {
     position: absolute;
 }
 
-/* Image styling */
+/* IMAGE */
 .stImage {
     border-radius: 12px;
     border: 1px solid #ddd6fe;
     background: white;
 }
 
-/* Download button */
+/* DOWNLOAD */
 .stDownloadButton > button {
     background: linear-gradient(135deg, #a78bfa, #8b5cf6);
     color: white;
