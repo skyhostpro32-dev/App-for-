@@ -9,7 +9,7 @@ import io
 st.set_page_config(page_title="AI Image Dashboard", layout="wide")
 
 # =========================
-# 🎨 ORANGE THEME CSS
+# 🎨 PRO CSS (Photoshop Style)
 # =========================
 st.markdown("""
 <style>
@@ -20,31 +20,34 @@ body {
 }
 
 /* ✨ TITLE */
-h1 {
-    color: #7c2d12;
+.main-title {
     text-align: center;
+    font-size: 38px;
     font-weight: 700;
+    color: #7c2d12;
 }
 
-/* 📦 SIDEBAR */
-section[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, #fff7ed, #ffe4d6);
-}
-
-/* 📤 UPLOAD BOX */
-[data-testid="stFileUploader"] {
-    border: 2px dashed #fb923c;
-    background: #fff7ed;
+/* 🧰 LEFT TOOLBAR */
+.toolbar {
+    background: white;
+    padding: 10px;
     border-radius: 12px;
-    padding: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
-/* 🎯 RADIO */
-.stRadio > div {
-    background: #ffffff;
-    padding: 10px;
+/* 🔲 TOOL BUTTON */
+.tool-btn button {
+    width: 100%;
+    margin-bottom: 10px;
     border-radius: 10px;
+    background: #fff7ed;
     border: 1px solid #fed7aa;
+}
+
+/* 🎨 ACTIVE TOOL */
+.active-tool {
+    background: linear-gradient(135deg, #f97316, #ea580c) !important;
+    color: white !important;
 }
 
 /* 🎨 BUTTON */
@@ -52,44 +55,22 @@ section[data-testid="stSidebar"] {
     background: linear-gradient(135deg, #f97316, #ea580c);
     color: white;
     border-radius: 10px;
-    padding: 10px 16px;
+    padding: 10px;
     border: none;
     font-weight: 600;
-    transition: 0.3s;
 }
 
-/* 🔥 BUTTON HOVER */
-.stButton > button:hover {
-    background: linear-gradient(135deg, #ea580c, #c2410c);
-    transform: scale(1.05);
-}
-
-/* 📸 IMAGE BOX */
+/* 📸 IMAGE */
 .stImage {
     border-radius: 12px;
     border: 1px solid #fed7aa;
-    padding: 5px;
     background: white;
 }
 
-/* 📥 DOWNLOAD */
-.stDownloadButton > button {
-    background: linear-gradient(135deg, #fb923c, #f97316);
-    color: white;
-    border-radius: 10px;
-}
-
-/* 🔻 DIVIDER */
-hr {
-    border: none;
-    height: 1px;
-    background: #fed7aa;
-}
-
-/* 🚀 FOOTER */
+/* 🔻 FOOTER */
 footer {
-    color: #9a3412;
     text-align: center;
+    color: #9a3412;
 }
 
 </style>
@@ -98,93 +79,148 @@ footer {
 # =========================
 # TITLE
 # =========================
-st.title("✨ AI Image Dashboard")
+st.markdown('<div class="main-title">✨ AI Image Dashboard</div>', unsafe_allow_html=True)
 
 # =========================
-# SIDEBAR
+# SIDEBAR (UPLOAD ONLY)
 # =========================
-st.sidebar.title("🧰 Tools")
-
-uploaded_file = st.sidebar.file_uploader(
-    "📤 Upload Image", type=["png", "jpg", "jpeg"]
-)
-
-tool = st.sidebar.radio(
-    "Select Tool",
-    ["🎨 Background Change", "✨ Enhance Image"]
-)
-
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 🎯 Advanced Tool")
-st.sidebar.markdown("👉 Use Erase Tool below")
-
-st.sidebar.markdown("[🚀 Open Erase Tool](https://skyhostpro32-dev.github.io/erase-tool/)")
-st.sidebar.markdown("[🚀 Open Blur Tool](https://skyhostpro32-dev.github.io/index./)")
-st.sidebar.markdown("[🚀 Open Remove Object Tool](https://l3c2ddsnh8gkka5rnezbak.streamlit.app/)")
-st.sidebar.markdown("[🚀 Open Background Tool](https://import-cus7p2zpohpwkbavzyrmpl.streamlit.app/)")
+st.sidebar.header("📤 Upload")
+uploaded_file = st.sidebar.file_uploader("", type=["png", "jpg", "jpeg"])
 
 # =========================
 # MAIN LAYOUT
 # =========================
-col1, col2 = st.columns(2)
+left, right = st.columns([1, 5])
 
-if uploaded_file:
-    image = Image.open(uploaded_file).convert("RGB")
-    image.thumbnail((600, 600))
+# =========================
+# 🧰 LEFT TOOLBAR
+# =========================
+with left:
+    st.markdown("### 🧰 Tools")
 
-    with col1:
-        st.subheader("📸 Original Image")
-        st.image(image, use_column_width=True)
+    if st.button("🎨 BG"):
+        st.session_state.tool = "bg"
+
+    if st.button("✨ Enhance"):
+        st.session_state.tool = "enhance"
+
+    if st.button("🧽 Erase"):
+        st.session_state.tool = "erase"
+
+    if st.button("🌫 Blur"):
+        st.session_state.tool = "blur"
+
+    if st.button("❌ Remove"):
+        st.session_state.tool = "remove"
+
+    if st.button("🖼 BG Tool"):
+        st.session_state.tool = "bg_tool"
+
+# =========================
+# 🖼 RIGHT PANEL
+# =========================
+with right:
+
+    # TOOL CARDS (shown when no tool selected)
+    if "tool" not in st.session_state:
+        st.subheader("🧰 Choose a Tool")
+
+        c1, c2, c3 = st.columns(3)
+        with c1:
+            if st.button("🎨 Background Change"):
+                st.session_state.tool = "bg"
+
+        with c2:
+            if st.button("✨ Enhance Image"):
+                st.session_state.tool = "enhance"
+
+        with c3:
+            if st.button("🧽 Erase Tool"):
+                st.session_state.tool = "erase"
+
+        c4, c5, c6 = st.columns(3)
+        with c4:
+            if st.button("🌫 Blur Tool"):
+                st.session_state.tool = "blur"
+
+        with c5:
+            if st.button("❌ Remove Object"):
+                st.session_state.tool = "remove"
+
+        with c6:
+            if st.button("🖼 Background Tool"):
+                st.session_state.tool = "bg_tool"
 
     # =========================
-    # 🎨 BACKGROUND CHANGE
+    # IMAGE AREA
     # =========================
-    if tool == "🎨 Background Change":
-        st.sidebar.subheader("🎨 Settings")
+    if uploaded_file:
+        image = Image.open(uploaded_file).convert("RGB")
+        image.thumbnail((600, 600))
 
-        color_hex = st.sidebar.color_picker("Pick Background Color", "#f97316")
-        color = tuple(int(color_hex[i:i+2], 16) for i in (1, 3, 5))
+        col1, col2 = st.columns(2)
 
-        if st.sidebar.button("🚀 Apply Background"):
-            with st.spinner("Processing..."):
+        with col1:
+            st.subheader("📸 Original")
+            st.image(image)
+
+        tool = st.session_state.get("tool", None)
+
+        # 🎨 BACKGROUND CHANGE
+        if tool == "bg":
+            color_hex = st.color_picker("Pick Color", "#f97316")
+            color = tuple(int(color_hex[i:i+2], 16) for i in (1, 3, 5))
+
+            if st.button("🚀 Apply"):
                 img_array = np.array(image)
                 gray = np.mean(img_array, axis=2)
                 mask = gray > 200
                 img_array[mask] = color
                 result = Image.fromarray(img_array)
 
-            with col2:
-                st.subheader("✅ Result")
-                st.image(result, use_column_width=True)
+                with col2:
+                    st.subheader("✅ Result")
+                    st.image(result)
 
-            buf = io.BytesIO()
-            result.save(buf, format="PNG")
-            st.download_button("📥 Download", buf.getvalue(), "background.png")
+                buf = io.BytesIO()
+                result.save(buf, format="PNG")
+                st.download_button("📥 Download", buf.getvalue(), "bg.png")
 
-    # =========================
-    # ✨ ENHANCE IMAGE
-    # =========================
-    elif tool == "✨ Enhance Image":
-        st.sidebar.subheader("✨ Settings")
+        # ✨ ENHANCE
+        elif tool == "enhance":
+            strength = st.slider("Sharpness", 1, 5, 2)
 
-        strength = st.sidebar.slider("Sharpness", 1, 5, 2)
-
-        if st.sidebar.button("🚀 Enhance"):
-            with st.spinner("Enhancing image..."):
+            if st.button("🚀 Enhance"):
                 result = image
                 for _ in range(strength):
                     result = result.filter(ImageFilter.SHARPEN)
 
-            with col2:
-                st.subheader("✅ Result")
-                st.image(result, use_column_width=True)
+                with col2:
+                    st.subheader("✅ Result")
+                    st.image(result)
 
-            buf = io.BytesIO()
-            result.save(buf, format="PNG")
-            st.download_button("📥 Download", buf.getvalue(), "enhanced.png")
+                buf = io.BytesIO()
+                result.save(buf, format="PNG")
+                st.download_button("📥 Download", buf.getvalue(), "enhanced.png")
 
-else:
-    st.info("👈 Upload an image from the sidebar to begin")
+        # 🔗 EXTERNAL TOOLS
+        elif tool == "erase":
+            st.link_button("🚀 Open Erase Tool", "https://skyhostpro32-dev.github.io/erase-tool/")
 
+        elif tool == "blur":
+            st.link_button("🚀 Open Blur Tool", "https://skyhostpro32-dev.github.io/index./")
+
+        elif tool == "remove":
+            st.link_button("🚀 Open Remove Tool", "https://l3c2ddsnh8gkka5rnezbak.streamlit.app/")
+
+        elif tool == "bg_tool":
+            st.link_button("🚀 Open Background Tool", "https://import-cus7p2zpohpwkbavzyrmpl.streamlit.app/")
+
+    else:
+        st.info("👈 Upload an image to start")
+
+# =========================
+# FOOTER
+# =========================
 st.markdown("---")
 st.caption("🚀 Built with Streamlit")
