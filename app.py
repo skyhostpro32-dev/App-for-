@@ -9,50 +9,67 @@ import io
 st.set_page_config(page_title="AI Image Dashboard", layout="wide")
 
 # =========================
-# 💜 GLOBAL CSS (HIDE STREAMLIT + LAVENDER UI)
+# 💜 GLOBAL CSS (FULL CLEAN UI)
 # =========================
 st.markdown("""
 <style>
 
-/* ❌ HIDE STREAMLIT HEADER & MENU */
+/* ============================= */
+/* ❌ REMOVE STREAMLIT UI ELEMENTS */
+/* ============================= */
+
+/* Top header (Share, GitHub, menu) */
 header {visibility: hidden;}
 #MainMenu {visibility: hidden;}
+
+/* Footer */
 footer {visibility: hidden;}
 
-/* ❌ HIDE MANAGE APP BUTTON */
-[data-testid="stStatusWidget"] {
-    display: none !important;
-}
+/* Bottom-right "Manage app" */
+[data-testid="stStatusWidget"] {display: none !important;}
+[data-testid="stDecoration"] {display: none !important;}
+[data-testid="stToolbar"] {display: none !important;}
+[data-testid="stDeployButton"] {display: none !important;}
 
-/* 🌈 FULL BACKGROUND */
+/* Extra fallback */
+button[kind="header"] {display: none !important;}
+div[class*="floating"] {display: none !important;}
+
+/* ============================= */
+/* 🌈 LAVENDER BACKGROUND FIX */
+/* ============================= */
+
 html, body, [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #f5f3ff, #ede9fe) !important;
 }
 
-/* REMOVE WHITE BLOCK */
 [data-testid="stAppViewContainer"] > .main {
     background: transparent;
 }
+
 .block-container {
     background: transparent;
     padding-top: 1rem;
 }
 
-/* ✨ TITLE */
+/* ============================= */
+/* ✨ UI STYLING */
+/* ============================= */
+
+/* Title */
 .main-title {
     text-align: center;
     font-size: 38px;
     font-weight: 700;
     color: #5b21b6;
-    margin-bottom: 10px;
 }
 
-/* 📦 SIDEBAR */
+/* Sidebar */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #f5f3ff, #ddd6fe);
 }
 
-/* 📤 UPLOAD BOX */
+/* Upload Box */
 [data-testid="stFileUploader"] {
     border: 2px dashed #c4b5fd;
     background: #f5f3ff;
@@ -60,7 +77,7 @@ section[data-testid="stSidebar"] {
     padding: 12px;
 }
 
-/* 🔲 TOOL CARD */
+/* Tool Cards */
 .tool-card {
     background: white;
     padding: 18px;
@@ -70,28 +87,25 @@ section[data-testid="stSidebar"] {
     height: 140px;
 }
 
-/* ✨ HOVER */
 .tool-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 25px rgba(139,92,246,0.15);
     border-color: #8b5cf6;
 }
 
-/* 🎨 TITLE */
 .tool-title {
     font-size: 18px;
     font-weight: 600;
     color: #5b21b6;
 }
 
-/* 📝 DESC */
 .tool-desc {
     font-size: 13px;
     color: #6d28d9;
     margin-top: 6px;
 }
 
-/* 👻 INVISIBLE BUTTON */
+/* Invisible clickable buttons */
 .stButton > button {
     width: 100%;
     height: 140px;
@@ -99,24 +113,18 @@ section[data-testid="stSidebar"] {
     position: absolute;
 }
 
-/* 📸 IMAGE */
+/* Image styling */
 .stImage {
     border-radius: 12px;
     border: 1px solid #ddd6fe;
     background: white;
 }
 
-/* 📥 DOWNLOAD BUTTON */
+/* Download button */
 .stDownloadButton > button {
     background: linear-gradient(135deg, #a78bfa, #8b5cf6);
     color: white;
     border-radius: 10px;
-}
-
-/* 🔻 FOOTER TEXT */
-footer {
-    text-align: center;
-    color: #6d28d9;
 }
 
 </style>
@@ -217,7 +225,6 @@ if uploaded_file:
 
     tool = st.session_state.get("tool")
 
-    # 🎨 BACKGROUND CHANGE
     if tool == "bg":
         color_hex = st.color_picker("Pick Color", "#8b5cf6")
         color = tuple(int(color_hex[i:i+2], 16) for i in (1, 3, 5))
@@ -237,7 +244,6 @@ if uploaded_file:
             result.save(buf, format="PNG")
             st.download_button("Download", buf.getvalue(), "bg.png")
 
-    # ✨ ENHANCE
     elif tool == "enhance":
         strength = st.slider("Sharpness", 1, 5, 2)
 
@@ -254,7 +260,6 @@ if uploaded_file:
             result.save(buf, format="PNG")
             st.download_button("Download", buf.getvalue(), "enhanced.png")
 
-    # 🔗 EXTERNAL TOOLS
     elif tool == "erase":
         st.link_button("Open Erase Tool", "https://skyhostpro32-dev.github.io/erase-tool/")
 
