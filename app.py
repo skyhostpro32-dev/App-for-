@@ -9,7 +9,7 @@ import io
 st.set_page_config(page_title="AI Image Dashboard", layout="wide")
 
 # =========================
-# 💜 LAVENDER CSS
+# 💜 LAVENDER UI CSS
 # =========================
 st.markdown("""
 <style>
@@ -25,15 +25,15 @@ body {
     font-size: 40px;
     font-weight: 700;
     color: #5b21b6;
+    margin-bottom: 20px;
 }
 
 /* 📦 SIDEBAR */
 section[data-testid="stSidebar"] {
     background: linear-gradient(180deg, #f5f3ff, #ddd6fe);
-    padding: 10px;
 }
 
-/* 📤 UPLOAD BOX */
+/* 📤 UPLOAD */
 [data-testid="stFileUploader"] {
     border: 2px dashed #a78bfa;
     background: #f5f3ff;
@@ -41,36 +41,29 @@ section[data-testid="stSidebar"] {
     padding: 10px;
 }
 
-/* 🔲 TOOL CARD */
-.tool-card {
-    background: white;
-    padding: 20px;
-    border-radius: 16px;
-    border: 1px solid #ddd6fe;
-    transition: 0.3s;
-    text-align: center;
-}
-
-.tool-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 25px rgba(139,92,246,0.2);
-    border-color: #8b5cf6;
-}
-
-/* 🧰 BUTTON */
+/* 🔲 TOOL BUTTON (CARD STYLE) */
 .stButton > button {
+    width: 100%;
+    height: 120px;  /* SAME SIZE */
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 600;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
     background: linear-gradient(135deg, #8b5cf6, #7c3aed);
     color: white;
-    border-radius: 10px;
-    padding: 10px;
     border: none;
-    font-weight: 600;
+    transition: 0.3s;
 }
 
 /* 🔥 HOVER */
 .stButton > button:hover {
+    transform: translateY(-6px);
     background: linear-gradient(135deg, #7c3aed, #6d28d9);
-    transform: scale(1.05);
 }
 
 /* 📸 IMAGE */
@@ -108,40 +101,40 @@ st.sidebar.header("📤 Upload Image")
 uploaded_file = st.sidebar.file_uploader("", type=["png", "jpg", "jpeg"])
 
 # =========================
-# TOOL CARDS
+# TOOL GRID
 # =========================
 st.subheader("🧰 Choose a Tool")
 
 col1, col2, col3 = st.columns(3)
 
 with col1:
-    if st.button("🎨 Background Change"):
+    if st.button("🎨\nBackground Change"):
         st.session_state.tool = "bg"
 
 with col2:
-    if st.button("✨ Enhance Image"):
+    if st.button("✨\nEnhance Image"):
         st.session_state.tool = "enhance"
 
 with col3:
-    if st.button("🧽 Erase Tool"):
+    if st.button("🧽\nErase Tool"):
         st.session_state.tool = "erase"
 
 col4, col5, col6 = st.columns(3)
 
 with col4:
-    if st.button("🌫 Blur Tool"):
+    if st.button("🌫\nBlur Tool"):
         st.session_state.tool = "blur"
 
 with col5:
-    if st.button("❌ Remove Object"):
+    if st.button("❌\nRemove Object"):
         st.session_state.tool = "remove"
 
 with col6:
-    if st.button("🖼 Background Tool"):
+    if st.button("🖼\nBackground Tool"):
         st.session_state.tool = "bg_tool"
 
 # =========================
-# MAIN IMAGE AREA
+# IMAGE PROCESSING
 # =========================
 if uploaded_file:
     image = Image.open(uploaded_file).convert("RGB")
