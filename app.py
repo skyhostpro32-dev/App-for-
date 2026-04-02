@@ -9,14 +9,22 @@ import io
 st.set_page_config(page_title="AI Image Dashboard", layout="wide")
 
 # =========================
-# 💜 LAVENDER CSS (CARD STYLE)
+# 💜 LAVENDER UI (FIXED BACKGROUND + CARDS)
 # =========================
 st.markdown("""
 <style>
 
-/* 🌈 BACKGROUND */
-body {
-    background: linear-gradient(135deg, #f5f3ff, #ede9fe);
+/* 🌈 FULL BACKGROUND FIX */
+html, body, [data-testid="stAppViewContainer"] {
+    background: linear-gradient(135deg, #f5f3ff, #ede9fe) !important;
+}
+
+/* REMOVE WHITE BLOCK */
+[data-testid="stAppViewContainer"] > .main {
+    background: transparent;
+}
+.block-container {
+    background: transparent;
 }
 
 /* ✨ TITLE */
@@ -72,7 +80,7 @@ section[data-testid="stSidebar"] {
     margin-top: 6px;
 }
 
-/* 👻 HIDE BUTTON STYLE */
+/* 👻 INVISIBLE BUTTON (CLICKABLE CARD) */
 .stButton > button {
     width: 100%;
     height: 140px;
@@ -198,7 +206,6 @@ if uploaded_file:
 
     tool = st.session_state.get("tool")
 
-    # 🎨 BACKGROUND CHANGE
     if tool == "bg":
         color_hex = st.color_picker("Pick Color", "#8b5cf6")
         color = tuple(int(color_hex[i:i+2], 16) for i in (1, 3, 5))
@@ -218,7 +225,6 @@ if uploaded_file:
             result.save(buf, format="PNG")
             st.download_button("Download", buf.getvalue(), "bg.png")
 
-    # ✨ ENHANCE
     elif tool == "enhance":
         strength = st.slider("Sharpness", 1, 5, 2)
 
@@ -235,7 +241,6 @@ if uploaded_file:
             result.save(buf, format="PNG")
             st.download_button("Download", buf.getvalue(), "enhanced.png")
 
-    # 🔗 EXTERNAL
     elif tool == "erase":
         st.link_button("Open Erase Tool", "https://skyhostpro32-dev.github.io/erase-tool/")
 
