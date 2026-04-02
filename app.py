@@ -9,12 +9,22 @@ import io
 st.set_page_config(page_title="AI Image Dashboard", layout="wide")
 
 # =========================
-# 💜 LAVENDER UI (FIXED BACKGROUND + CARDS)
+# 💜 GLOBAL CSS (HIDE STREAMLIT + LAVENDER UI)
 # =========================
 st.markdown("""
 <style>
 
-/* 🌈 FULL BACKGROUND FIX */
+/* ❌ HIDE STREAMLIT HEADER & MENU */
+header {visibility: hidden;}
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
+/* ❌ HIDE MANAGE APP BUTTON */
+[data-testid="stStatusWidget"] {
+    display: none !important;
+}
+
+/* 🌈 FULL BACKGROUND */
 html, body, [data-testid="stAppViewContainer"] {
     background: linear-gradient(135deg, #f5f3ff, #ede9fe) !important;
 }
@@ -25,6 +35,7 @@ html, body, [data-testid="stAppViewContainer"] {
 }
 .block-container {
     background: transparent;
+    padding-top: 1rem;
 }
 
 /* ✨ TITLE */
@@ -32,7 +43,7 @@ html, body, [data-testid="stAppViewContainer"] {
     text-align: center;
     font-size: 38px;
     font-weight: 700;
-    color: #4c1d95;
+    color: #5b21b6;
     margin-bottom: 10px;
 }
 
@@ -43,17 +54,17 @@ section[data-testid="stSidebar"] {
 
 /* 📤 UPLOAD BOX */
 [data-testid="stFileUploader"] {
-    border: 2px dashed #d8b4fe;
+    border: 2px dashed #c4b5fd;
     background: #f5f3ff;
-    border-radius: 12px;
-    padding: 10px;
+    border-radius: 14px;
+    padding: 12px;
 }
 
 /* 🔲 TOOL CARD */
 .tool-card {
     background: white;
     padding: 18px;
-    border-radius: 16px;
+    border-radius: 18px;
     border: 1px solid #e9d5ff;
     transition: 0.25s;
     height: 140px;
@@ -61,8 +72,8 @@ section[data-testid="stSidebar"] {
 
 /* ✨ HOVER */
 .tool-card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(139,92,246,0.15);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(139,92,246,0.15);
     border-color: #8b5cf6;
 }
 
@@ -70,7 +81,7 @@ section[data-testid="stSidebar"] {
 .tool-title {
     font-size: 18px;
     font-weight: 600;
-    color: #4c1d95;
+    color: #5b21b6;
 }
 
 /* 📝 DESC */
@@ -80,7 +91,7 @@ section[data-testid="stSidebar"] {
     margin-top: 6px;
 }
 
-/* 👻 INVISIBLE BUTTON (CLICKABLE CARD) */
+/* 👻 INVISIBLE BUTTON */
 .stButton > button {
     width: 100%;
     height: 140px;
@@ -95,14 +106,14 @@ section[data-testid="stSidebar"] {
     background: white;
 }
 
-/* 📥 DOWNLOAD */
+/* 📥 DOWNLOAD BUTTON */
 .stDownloadButton > button {
     background: linear-gradient(135deg, #a78bfa, #8b5cf6);
     color: white;
     border-radius: 10px;
 }
 
-/* 🔻 FOOTER */
+/* 🔻 FOOTER TEXT */
 footer {
     text-align: center;
     color: #6d28d9;
@@ -206,6 +217,7 @@ if uploaded_file:
 
     tool = st.session_state.get("tool")
 
+    # 🎨 BACKGROUND CHANGE
     if tool == "bg":
         color_hex = st.color_picker("Pick Color", "#8b5cf6")
         color = tuple(int(color_hex[i:i+2], 16) for i in (1, 3, 5))
@@ -225,6 +237,7 @@ if uploaded_file:
             result.save(buf, format="PNG")
             st.download_button("Download", buf.getvalue(), "bg.png")
 
+    # ✨ ENHANCE
     elif tool == "enhance":
         strength = st.slider("Sharpness", 1, 5, 2)
 
@@ -241,6 +254,7 @@ if uploaded_file:
             result.save(buf, format="PNG")
             st.download_button("Download", buf.getvalue(), "enhanced.png")
 
+    # 🔗 EXTERNAL TOOLS
     elif tool == "erase":
         st.link_button("Open Erase Tool", "https://skyhostpro32-dev.github.io/erase-tool/")
 
